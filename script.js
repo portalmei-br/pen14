@@ -3,7 +3,7 @@ const peneirasData = [
     {
         id: 1,
         titulo: "Peneira Sub-15 e Sub-17",
-        clube: "Santos FC",
+        clube: "Bragantino",
         endereco: null, // Será preenchido com o CEP do usuário
         data: "2024-08-15",
         horario: "14:00",
@@ -16,7 +16,7 @@ const peneirasData = [
         status: "aberta",
         vagasDisponiveis: 8,
         totalVagas: 50,
-        prazoInscricao: "2026-08-10",
+        prazoInscricao: "Encerra em 02 Dias",
         inscricaoEncerrada: false
     },
     {
@@ -765,15 +765,15 @@ function getDiasRestantes(prazoInscricao) {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays < 0) {
-        return 'Prazo expirado';
+        return 'Últimas Vagas';
     } else if (diffDays === 0) {
-        return 'Último dia!';
+        return 'Últimas Vagas';
     } else if (diffDays === 1) {
-        return 'Termina amanhã';
+        return 'Últimas Vagas';
     } else if (diffDays <= 7) {
-        return `${diffDays} dias restantes`;
+        return `${diffDays} Últimas Vagas`;
     } else {
-        return `${diffDays} dias restantes`;
+        return `${diffDays} Últimas Vagas`;
     }
 }
 
