@@ -16,7 +16,7 @@ const peneirasData = [
         status: "aberta",
         vagasDisponiveis: 8,
         totalVagas: 50,
-        prazoInscricao: "2024-08-10",
+        prazoInscricao: "2026-08-10",
         inscricaoEncerrada: false
     },
     {
