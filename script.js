@@ -777,18 +777,6 @@ function getDiasRestantes(prazoInscricao) {
     }
 }
 
-// Função para formatar data
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    };
-    return date.toLocaleDateString('pt-BR', options);
-}
-
 // NOVA FUNÇÃO: Abrir modal com informações da peneira
 function openPeneiraModal(peneiraId) {
     const peneira = peneirasData.find(p => p.id === peneiraId);
