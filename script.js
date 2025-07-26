@@ -5,7 +5,7 @@ const peneirasData = [
         titulo: "Peneira Sub-15 e Sub-17",
         clube: "Santos FC",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2025-08-09",
+        data: "2025-08-10",
         horario: "14:00",
         categoria: "Sub-15, Sub-17",
         requisitos: "Idade entre 13-17 anos",
@@ -16,7 +16,7 @@ const peneirasData = [
         status: "aberta",
         vagasDisponiveis: 8,
         totalVagas: 60,
-        prazoInscricao: "2024-08-10",
+        prazoInscricao: "2025-08-05",
         inscricaoEncerrada: false
     },
     {
@@ -24,7 +24,7 @@ const peneirasData = [
         titulo: "Peneira Categoria de Base",
         clube: "São Paulo FC",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2025-08-09",
+        data: "2025-08-10",
         horario: "09:00",
         categoria: "Sub-13, Sub-15",
         requisitos: "Idade entre 11-15 anos",
@@ -35,7 +35,7 @@ const peneirasData = [
         status: "encerrada",
         vagasDisponiveis: 0,
         totalVagas: 40,
-        prazoInscricao: "2024-08-15",
+        prazoInscricao: "2025-08-05",
         inscricaoEncerrada: true
     },
     {
@@ -43,7 +43,7 @@ const peneirasData = [
         titulo: "Peneira Feminina",
         clube: "Corinthians",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2025-08-09",
+        data: "2025-08-10",
         horario: "15:30",
         categoria: "Sub-16, Sub-18",
         requisitos: "Idade entre 14-18 anos (feminino)",
@@ -54,7 +54,7 @@ const peneirasData = [
         status: "aberta",
         vagasDisponiveis: 3,
         totalVagas: 70,
-        prazoInscricao: "2024-08-20",
+        prazoInscricao: "2025-08-05",
         inscricaoEncerrada: false
     },
     {
@@ -62,7 +62,7 @@ const peneirasData = [
         titulo: "Peneira Juvenil",
         clube: "Palmeiras",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2025-08-09",
+        data: "2025-08-10",
         horario: "10:00",
         categoria: "Sub-17, Sub-20",
         requisitos: "Idade entre 15-20 anos",
@@ -73,7 +73,7 @@ const peneirasData = [
         status: "aberta",
         vagasDisponiveis: 9,
         totalVagas: 60,
-        prazoInscricao: "2024-08-28",
+        prazoInscricao: "2025-08-05",
         inscricaoEncerrada: false
     },
     {
@@ -81,7 +81,7 @@ const peneirasData = [
         titulo: "Peneira Regional",
         clube: "Red Bull Bragantino",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2025-08-09",
+        data: "2025-08-10",
         horario: "13:00",
         categoria: "Sub-14, Sub-16",
         requisitos: "Idade entre 12-16 anos",
@@ -92,7 +92,7 @@ const peneirasData = [
         status: "encerrada",
         vagasDisponiveis: 0,
         totalVagas: 25,
-        prazoInscricao: "2024-09-01",
+        prazoInscricao: "2025-08-05",
         inscricaoEncerrada: true
     },
     {
@@ -100,7 +100,7 @@ const peneirasData = [
         titulo: "Peneira Escolar",
         clube: "Ponte Preta",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2025-08-09",
+        data: "2025-08-10",
         horario: "14:30",
         categoria: "Sub-13, Sub-15",
         requisitos: "Idade entre 11-15 anos",
@@ -111,7 +111,7 @@ const peneirasData = [
         status: "aberta",
         vagasDisponiveis: 7,
         totalVagas: 85,
-        prazoInscricao: "2024-09-07",
+        prazoInscricao: "2025-08-05",
         inscricaoEncerrada: false
     }
 ];
