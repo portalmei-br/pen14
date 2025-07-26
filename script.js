@@ -758,9 +758,9 @@ function getPrazoInfo(peneira) {
 }
 
 // Função para calcular dias restantes
-function getDiasRestantes(prazoInscricao) {
+function getDiasRestantes() {
     const hoje = new Date();
-    const prazo = new Date(prazoInscricao);
+    const prazo = new Date();
     const diffTime = prazo - hoje;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
@@ -775,6 +775,18 @@ function getDiasRestantes(prazoInscricao) {
     } else {
         return `${diffDays} dias restantes`;
     }
+}
+
+// Função para formatar data
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    };
+    return date.toLocaleDateString('pt-BR', options);
 }
 
 // NOVA FUNÇÃO: Abrir modal com informações da peneira
