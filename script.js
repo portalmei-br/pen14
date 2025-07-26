@@ -5,7 +5,7 @@ const peneirasData = [
         titulo: "Peneira Sub-15 e Sub-17",
         clube: "Santos FC",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2024-08-15",
+        data: "2025-08-09",
         horario: "14:00",
         categoria: "Sub-15, Sub-17",
         requisitos: "Idade entre 13-17 anos",
@@ -24,7 +24,7 @@ const peneirasData = [
         titulo: "Peneira Categoria de Base",
         clube: "São Paulo FC",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2024-08-20",
+        data: "2025-08-09",
         horario: "09:00",
         categoria: "Sub-13, Sub-15",
         requisitos: "Idade entre 11-15 anos",
@@ -43,7 +43,7 @@ const peneirasData = [
         titulo: "Peneira Feminina",
         clube: "Corinthians",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2024-08-25",
+        data: "2025-08-09",
         horario: "15:30",
         categoria: "Sub-16, Sub-18",
         requisitos: "Idade entre 14-18 anos (feminino)",
@@ -62,7 +62,7 @@ const peneirasData = [
         titulo: "Peneira Juvenil",
         clube: "Palmeiras",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2024-09-01",
+        data: "2025-08-09",
         horario: "10:00",
         categoria: "Sub-17, Sub-20",
         requisitos: "Idade entre 15-20 anos",
@@ -81,7 +81,7 @@ const peneirasData = [
         titulo: "Peneira Regional",
         clube: "Red Bull Bragantino",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2024-09-05",
+        data: "2025-08-09",
         horario: "13:00",
         categoria: "Sub-14, Sub-16",
         requisitos: "Idade entre 12-16 anos",
@@ -100,7 +100,7 @@ const peneirasData = [
         titulo: "Peneira Escolar",
         clube: "Ponte Preta",
         endereco: null, // Será preenchido com o CEP do usuário
-        data: "2024-09-10",
+        data: "2025-08-09",
         horario: "14:30",
         categoria: "Sub-13, Sub-15",
         requisitos: "Idade entre 11-15 anos",
