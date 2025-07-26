@@ -15,7 +15,7 @@ const peneirasData = [
         lng: -46.3322,
         status: "aberta",
         vagasDisponiveis: 8,
-        totalVagas: 50,
+        totalVagas: 60,
         prazoInscricao: "2024-08-10",
         inscricaoEncerrada: false
     },
@@ -53,7 +53,7 @@ const peneirasData = [
         lng: -46.6544,
         status: "aberta",
         vagasDisponiveis: 3,
-        totalVagas: 30,
+        totalVagas: 70,
         prazoInscricao: "2024-08-20",
         inscricaoEncerrada: false
     },
@@ -71,7 +71,7 @@ const peneirasData = [
         lat: -23.5629,
         lng: -46.6544,
         status: "aberta",
-        vagasDisponiveis: 15,
+        vagasDisponiveis: 9,
         totalVagas: 60,
         prazoInscricao: "2024-08-28",
         inscricaoEncerrada: false
@@ -109,8 +109,8 @@ const peneirasData = [
         lat: -22.9056,
         lng: -47.0608,
         status: "aberta",
-        vagasDisponiveis: 22,
-        totalVagas: 35,
+        vagasDisponiveis: 7,
+        totalVagas: 85,
         prazoInscricao: "2024-09-07",
         inscricaoEncerrada: false
     }
