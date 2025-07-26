@@ -1722,9 +1722,9 @@ body {
         justify-content: center;
     }
     
-    @media (max-width: 1024px) {
     .hero-stats {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
     }
     
     .results-header {
@@ -1774,16 +1774,8 @@ body {
         padding: 0 var(--space-sm);
     }
     
-     .hero-title {
-        font-size: var(--font-size-3xl);
-    }
-    
-    .hero-description {
-        font-size: var(--font-size-base);
-    }
-    
-    .section-title {
-        font-size: var(--font-size-3xl);
+    .hero-content {
+        padding-top: 80px;
     }
     
     .search-box {
