@@ -1773,9 +1773,13 @@ body {
     .container {
         padding: 0 var(--space-sm);
     }
+
+    .nav-container {
+        padding: var(--space-md);
+    }
     
     .hero-content {
-        padding-top: 60px;
+        padding-top: 80px;
     }
 
     .hero-title {
