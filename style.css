@@ -1777,6 +1777,18 @@ body {
     .hero-content {
         padding-top: 80px;
     }
+
+    .hero-title {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .hero-description {
+        font-size: var(--font-size-base);
+    }
+    
+    .section-title {
+        font-size: var(--font-size-3xl);
+    }
     
     .search-box {
         padding: var(--space-lg);
