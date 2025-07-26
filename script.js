@@ -1,9 +1,14 @@
+const PRAZO_INSCRICAO_TEXTO_PADRAO = "Prazo de Inscrição:";
+const PRAZO_EXPIRADO_TEXTO_PADRAO = "Prazo Expirado";
+const ULTIMO_DIA_TEXTO_PADRAO = "Último dia!";
+const INSCRICOES_ENCERRADAS_TEXTO_PADRAO = "Inscrições Encerradas";
+
 // Dados simulados de peneiras de futebol - VERSÃO SIMPLIFICADA
 const peneirasData = [
     {
         id: 1,
         titulo: "Peneira Sub-15 e Sub-17",
-        clube: "Bragantino",
+        clube: "Santos FC",
         endereco: null, // Será preenchido com o CEP do usuário
         data: "2024-08-15",
         horario: "14:00",
@@ -16,7 +21,7 @@ const peneirasData = [
         status: "aberta",
         vagasDisponiveis: 8,
         totalVagas: 50,
-        prazo: "Encerra em 02 Dias",
+        prazoInscricao: "2024-08-10",
         inscricaoEncerrada: false
     },
     {
@@ -501,132 +506,57 @@ async function handleSearch() {
 // Função para buscar peneiras
 function searchPeneiras(location) {
     try {
-        // Simular geocodificação da localização digitada
-        const userCoords = geocodeLocation(location);
+        // Simular busca de peneiras
+        console.log(`Buscando peneiras para localização: ${location}`);
         
-        // Calcular distâncias e filtrar resultados
-        const results = peneirasData.map(peneira => {
-            const distance = calculateDistance(
-                userCoords.lat, userCoords.lng,
-                peneira.lat, peneira.lng
-            );
-            
-            return {
-                ...peneira,
-                distancia: Math.round(distance * 10) / 10
-            };
-        }).sort((a, b) => a.distancia - b.distancia);
+        // Filtrar e ordenar peneiras por distância
+        currentResults = peneirasData
+            .filter(peneira => peneira.endereco) // Apenas peneiras com endereço
+            .sort((a, b) => a.distancia - b.distancia);
         
-        // Filtrar apenas peneiras em um raio de 100km
-        currentResults = results.filter(peneira => peneira.distancia <= 100);
+        console.log(`Encontradas ${currentResults.length} peneiras`);
         
+        // Exibir resultados
+        displayResults();
         hideLoading();
-        displayResults(currentResults);
         
     } catch (error) {
-        hideLoading();
+        console.error('Erro ao buscar peneiras:', error);
         showNotification('Erro ao buscar peneiras. Tente novamente.', 'error');
+        hideLoading();
     }
-}
-
-// Função simulada de geocodificação
-function geocodeLocation(location) {
-    // Coordenadas simuladas baseadas na localização
-    const locationMap = {
-        'são paulo': { lat: -23.5505, lng: -46.6333 },
-        'rio de janeiro': { lat: -22.9068, lng: -43.1729 },
-        'belo horizonte': { lat: -19.9167, lng: -43.9345 },
-        'porto alegre': { lat: -30.0346, lng: -51.2177 },
-        'salvador': { lat: -12.9714, lng: -38.5014 },
-        'brasília': { lat: -15.8267, lng: -47.9218 },
-        'santos': { lat: -23.9618, lng: -46.3322 },
-        'campinas': { lat: -22.9056, lng: -47.0608 }
-    };
-    
-    const normalizedLocation = location.toLowerCase();
-    
-    // Procurar por correspondência parcial
-    for (const [key, coords] of Object.entries(locationMap)) {
-        if (normalizedLocation.includes(key) || key.includes(normalizedLocation.split(',')[0].trim().toLowerCase())) {
-            return coords;
-        }
-    }
-    
-    // Retornar São Paulo como padrão
-    return locationMap['são paulo'];
-}
-
-// Função para definir filtro ativo
-function setActiveFilter(filter) {
-    filterBtns.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('data-filter') === filter) {
-            btn.classList.add('active');
-        }
-    });
-    currentFilter = filter;
-}
-
-// Função para aplicar filtro
-function applyFilter(filter) {
-    let filteredResults = [...currentResults];
-    
-    switch (filter) {
-        case 'distance':
-            filteredResults.sort((a, b) => a.distancia - b.distancia);
-            break;
-        case 'date':
-            filteredResults.sort((a, b) => new Date(a.data) - new Date(b.data));
-            break;
-        default:
-            // 'all' - manter ordem original
-            break;
-    }
-    
-    displayResults(filteredResults);
 }
 
 // Função para exibir resultados
-function displayResults(results) {
-    resultsSection.style.display = 'block';
-    resultsSection.scrollIntoView({ behavior: 'smooth' });
-    
-    if (results.length === 0) {
-        resultsContainer.style.display = 'none';
-        noResults.style.display = 'block';
+function displayResults() {
+    if (currentResults.length === 0) {
+        showNoResults();
         return;
     }
     
-    noResults.style.display = 'none';
-    resultsContainer.style.display = 'grid';
     resultsContainer.innerHTML = '';
     
-    // Criar cards
-    results.forEach((peneira, index) => {
-        const resultCard = createResultCard(peneira);
-        resultsContainer.appendChild(resultCard);
-        
-        // Animação escalonada
-        setTimeout(() => {
-            resultCard.classList.add('animate-fade-in-up');
-        }, index * 100);
+    currentResults.forEach(peneira => {
+        const card = createPeneiraCard(peneira);
+        resultsContainer.appendChild(card);
+    });
+    
+    resultsSection.style.display = 'block';
+    noResults.style.display = 'none';
+    
+    // Scroll suave para os resultados
+    resultsSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
     });
 }
 
-// FUNÇÃO MODIFICADA PARA CRIAR CARD DE RESULTADO - COM BOTÃO "QUERO PARTICIPAR"
-function createResultCard(peneira) {
+// Função para criar card de peneira
+function createPeneiraCard(peneira) {
     const card = document.createElement('div');
-    card.className = 'result-card';
+    card.className = 'peneira-card';
     
-    const dataFormatada = formatDate(peneira.data);
-    const prazoFormatado = formatDate(peneira.prazoInscricao);
-    const distanciaTexto = peneira.distancia < 1 ? 
-        `${Math.round(peneira.distancia * 1000)}m` : 
-        `${peneira.distancia}km`;
-    
-    // Determinar status e informações de vagas de forma mais elegante
     const statusInfo = getStatusInfo(peneira);
-    const vagasInfo = getVagasInfo(peneira);
     const prazoInfo = getPrazoInfo(peneira);
     
     card.innerHTML = `
@@ -635,51 +565,91 @@ function createResultCard(peneira) {
                 <h3 class="card-title">${peneira.titulo}</h3>
                 <p class="card-club">${peneira.clube}</p>
             </div>
-            <div class="card-badges">
-                <span class="distance-badge">${distanciaTexto}</span>
+            <div class="card-status">
                 ${statusInfo.badge}
             </div>
         </div>
         
-        ${statusInfo.banner}
+        ${statusInfo.banner || ''}
         
         <div class="card-content">
-            <div class="event-details">
-                <div class="detail-row primary">
+            <div class="info-grid">
+                <div class="info-item">
                     <i class="fas fa-calendar-alt"></i>
-                    <span>${dataFormatada} às ${peneira.horario}</span>
+                    <div>
+                        <span class="info-label">Data</span>
+                        <span class="info-value">${formatDate(peneira.data)}</span>
+                    </div>
                 </div>
-                <div class="detail-row">
+                
+                <div class="info-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <span class="info-label">Horário</span>
+                        <span class="info-value">${peneira.horario}</span>
+                    </div>
+                </div>
+                
+                <div class="info-item">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>${peneira.endereco || 'Endereço será definido após busca'}</span>
+                    <div>
+                        <span class="info-label">Localização</span>
+                        <span class="info-value">${peneira.endereco}</span>
+                    </div>
                 </div>
-                <div class="detail-row">
+                
+                <div class="info-item">
+                    <i class="fas fa-route"></i>
+                    <div>
+                        <span class="info-label">Distância</span>
+                        <span class="info-value">${peneira.distancia.toFixed(1)} km</span>
+                    </div>
+                </div>
+                
+                <div class="info-item">
                     <i class="fas fa-users"></i>
-                    <span>${peneira.categoria}</span>
+                    <div>
+                        <span class="info-label">Categoria</span>
+                        <span class="info-value">${peneira.categoria}</span>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <div>
+                        <span class="info-label">Requisitos</span>
+                        <span class="info-value">${peneira.requisitos}</span>
+                    </div>
                 </div>
             </div>
             
-            ${vagasInfo.html}
-            ${prazoInfo.html}
+            <div class="prazo-info">
+                <i class="fas fa-hourglass-half"></i>
+                <span>${PRAZO_INSCRICAO_TEXTO_PADRAO} ${prazoInfo.texto}</span>
+            </div>
+            
+            <div class="vagas-info">
+                <div class="vagas-disponivel">
+                    <span class="vagas-numero">${peneira.vagasDisponiveis}</span>
+                    <span class="vagas-label">vagas disponíveis</span>
+                </div>
+                <div class="vagas-total">
+                    <span>de ${peneira.totalVagas} vagas</span>
+                </div>
+            </div>
         </div>
         
         <div class="card-actions">
-            ${peneira.status === 'aberta' ? `
-                <button class="btn-primary" onclick="openPeneiraModal(${peneira.id})">
-                    <i class="fas fa-futbol"></i>
-                    <span>Quero Participar</span>
-                </button>
-            ` : `
-                <button class="btn-disabled" disabled>
-                    <i class="fas fa-lock"></i>
-                    <span>Encerrada</span>
-                </button>
-            `}
+            <button class="btn-contact" onclick="openContact('${peneira.contato}')">
+                <i class="fas fa-phone"></i>
+                Contato
+            </button>
+            <button class="btn-directions" onclick="openDirections(${peneira.lat}, ${peneira.lng})">
+                <i class="fas fa-directions"></i>
+                Como Chegar
+            </button>
         </div>
     `;
-    
-    // Adicionar classe de status ao card
-    card.classList.add(`card-${peneira.status}`);
     
     return card;
 }
@@ -688,8 +658,8 @@ function createResultCard(peneira) {
 function getStatusInfo(peneira) {
     if (peneira.status === 'encerrada') {
         return {
-            badge: '<span class="status-badge status-closed">Encerrada</span>',
-            banner: '<div class="status-banner closed"><i class="fas fa-times-circle"></i><span>Inscrições Encerradas</span></div>'
+            badge: `<span class="status-badge status-closed">${INSCRICOES_ENCERRADAS_TEXTO_PADRAO}</span>`,
+            banner: `<div class="status-banner closed"><i class="fas fa-times-circle"></i><span>${INSCRICOES_ENCERRADAS_TEXTO_PADRAO}</span></div>`
         };
     }
     
@@ -705,178 +675,144 @@ function getStatusInfo(peneira) {
     
     return {
         badge: availabilityBadge,
-        banner: ''
+        banner: null
     };
 }
 
-// Função refinada para obter informações de vagas
-function getVagasInfo(peneira) {
-    if (peneira.status !== 'aberta') {
-        return { html: '' };
-    }
-    
-    const percentualOcupado = ((peneira.totalVagas - peneira.vagasDisponiveis) / peneira.totalVagas) * 100;
-    
-    return {
-        html: `
-            <div class="availability-section">
-                <div class="availability-header">
-                    <span class="availability-label">Disponibilidade</span>
-                    <span class="availability-count">${peneira.vagasDisponiveis} de ${peneira.totalVagas} vagas</span>
-                </div>
-                <div class="availability-bar">
-                    <div class="availability-progress" style="width: ${percentualOcupado}%"></div>
-                </div>
-            </div>
-        `
-    };
-}
-
-// Função refinada para obter informações de prazo
+// Função para obter informações do prazo
 function getPrazoInfo(peneira) {
-    if (peneira.status !== 'aberta') {
-        return { html: '' };
-    }
+    const hoje = new Date();
+    const prazoPeneira = new Date(peneira.prazoInscricao);
+    const diasRestantes = Math.ceil((prazoPeneira - hoje) / (1000 * 60 * 60 * 24));
     
-    const diasRestantes = getDiasRestantes(peneira.prazoInscricao);
-    const prazoFormatado = formatDate(peneira.prazoInscricao);
-    
-    return {
-        html: `
-            <div class="deadline-section">
-                <div class="deadline-info">
-                    <i class="fas fa-clock"></i>
-                    <div class="deadline-text">
-                        <span class="deadline-label">Prazo de inscrição</span>
-                        <span class="deadline-date">${prazoFormatado}</span>
-                        <span class="deadline-remaining">${diasRestantes}</span>
-                    </div>
-                </div>
-            </div>
-        `
-    };
+    return getDiasRestantes(diasRestantes);
 }
 
 // Função para calcular dias restantes
-function getDiasRestantes(prazoInscricao) {
-    const hoje = new Date();
-    const prazo = new Date(prazoInscricao);
-    const diffTime = prazo - hoje;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 0) {
-        return 'Últimas Vagas';
-    } else if (diffDays === 0) {
-        return 'Últimas Vagas';
-    } else if (diffDays === 1) {
-        return 'Últimas Vagas';
-    } else if (diffDays <= 7) {
-        return `${diffDays} Últimas Vagas`;
+function getDiasRestantes(dias) {
+    if (dias < 0) {
+        return { texto: PRAZO_EXPIRADO_TEXTO_PADRAO, classe: 'expired' };
+    } else if (dias === 0) {
+        return { texto: ULTIMO_DIA_TEXTO_PADRAO, classe: 'urgent' };
+    } else if (dias === 1) {
+        return { texto: `${dias} dia restante`, classe: 'urgent' };
+    } else if (dias <= 3) {
+        return { texto: `${dias} dias restantes`, classe: 'warning' };
     } else {
-        return `${diffDays} Últimas Vagas`;
+        return { texto: `${dias} dias restantes`, classe: 'normal' };
     }
 }
 
 // Função para formatar data
 function formatDate(dateString) {
     const date = new Date(dateString);
-    const options = { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-    };
-    return date.toLocaleDateString('pt-BR', options);
+    return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
 }
 
-// NOVA FUNÇÃO: Abrir modal com informações da peneira
-function openPeneiraModal(peneiraId) {
-    const peneira = peneirasData.find(p => p.id === peneiraId);
-      // Armazenar o ID da peneira atual para uso no botão de inscrição
-    currentPeneiraId = peneira.id;
+// Função para mostrar "sem resultados"
+function showNoResults() {
+    resultsSection.style.display = 'block';
+    resultsContainer.innerHTML = '';
+    noResults.style.display = 'block';
+}
+
+// Função para aplicar filtros
+function applyFilter(filter) {
+    currentFilter = filter;
     
-    // Preencher dados do modal
-    document.getElementById('modal-titulo').textContent = peneira.titulo;
-    document.getElementById('modal-clube').textContent = peneira.clube;
-    document.getElementById('modal-data').textContent = formatDate(peneira.data);
-    document.getElementById('modal-horario').textContent = peneira.horario;
-    document.getElementById('modal-endereco').textContent = peneira.endereco || 'Endereço será definido após busca';
-    document.getElementById('modal-categoria').textContent = peneira.categoria;
-    document.getElementById('modal-requisitos').textContent = peneira.requisitos;
-    document.getElementById('modal-contato').textContent = peneira.contato;
-    document.getElementById('modal-prazo').textContent = formatDate(peneira.prazoInscricao);   // Informações de vagas (apenas para peneiras abertas)
-    if (peneira.status === 'aberta') {
-        const percentualOcupado = ((peneira.totalVagas - peneira.vagasDisponiveis) / peneira.totalVagas) * 100;
-        document.getElementById('modal-vagas').textContent = `${peneira.vagasDisponiveis} vagas disponíveis de ${peneira.totalVagas} total`;
-        document.getElementById('modal-availability-progress').style.width = `${percentualOcupado}%`;
-        document.getElementById('modal-vagas-info').style.display = 'block';
-    } else {
-        document.getElementById('modal-vagas-info').style.display = 'none';
+    let filteredResults = [...currentResults];
+    
+    switch(filter) {
+        case 'abertas':
+            filteredResults = currentResults.filter(p => p.status === 'aberta');
+            break;
+        case 'encerradas':
+            filteredResults = currentResults.filter(p => p.status === 'encerrada');
+            break;
+        case 'poucas-vagas':
+            filteredResults = currentResults.filter(p => p.status === 'aberta' && p.vagasDisponiveis <= 10);
+            break;
+        case 'all':
+        default:
+            // Mostrar todas
+            break;
     }
     
-    // Mostrar modal
-    const modal = document.getElementById('peneira-modal');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    
-    // Fechar modal ao clicar fora dele
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closePeneiraModal();
+    // Atualizar display
+    currentResults = filteredResults;
+    displayResults();
+}
+
+// Função para definir filtro ativo
+function setActiveFilter(filter) {
+    filterBtns.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-filter') === filter) {
+            btn.classList.add('active');
         }
     });
 }
 
-// NOVA FUNÇÃO: Fechar modal
-function closePeneiraModal() {
-    const modal = document.getElementById('peneira-modal');
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+// Funções de ação dos cards
+function openContact(phone) {
+    window.open(`tel:${phone}`, '_self');
 }
 
-// Event listener para fechar modal com ESC
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closePeneiraModal();
-    }
-});
+function openDirections(lat, lng) {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    window.open(url, '_blank');
+}
 
 // Função para mostrar loading
-function showLoading(isCepSearch = false) {
-    if (!isCepSearch) {
-        loadingAddress.textContent = 'Buscando peneiras...';
-    }
+function showLoading(withAddress = false) {
     loadingOverlay.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    if (withAddress) {
+        loadingAddress.style.display = 'block';
+    }
 }
 
 // Função para esconder loading
 function hideLoading() {
     loadingOverlay.style.display = 'none';
-    document.body.style.overflow = 'auto';
+    loadingAddress.style.display = 'none';
 }
 
 // Função para mostrar notificações
 function showNotification(message, type = 'info') {
-    // Remover notificação existente
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-    
+    // Criar elemento de notificação
     const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${getNotificationIcon(type)}"></i>
+        <span>${message}</span>
+        <button class="notification-close" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
     
-    const container = document.getElementById('notification-container');
-    container.appendChild(notification);
+    // Adicionar ao DOM
+    document.body.appendChild(notification);
     
-    // Remover notificação após 5 segundos
+    // Remover automaticamente após 5 segundos
     setTimeout(() => {
-        if (notification.parentNode) {
+        if (notification.parentElement) {
             notification.remove();
         }
     }, 5000);
+}
+
+// Função para obter ícone da notificação
+function getNotificationIcon(type) {
+    switch(type) {
+        case 'success': return 'check-circle';
+        case 'error': return 'exclamation-circle';
+        case 'warning': return 'exclamation-triangle';
+        default: return 'info-circle';
+    }
 }
 
 // Função para configurar animações de scroll
@@ -889,111 +825,12 @@ function setupScrollAnimations() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fade-in-up');
-                observer.unobserve(entry.target);
+                entry.target.classList.add('animate-in');
             }
         });
     }, observerOptions);
     
     // Observar elementos que devem ser animados
-    const animatedElements = document.querySelectorAll('.step-card, .feature-card, .testimonial-card');
+    const animatedElements = document.querySelectorAll('.hero, .features, .stats, .cta');
     animatedElements.forEach(el => observer.observe(el));
-}
-
-
-// Variável global para armazenar o ID da peneira atual no modal
-let currentPeneiraId = null;
-
-// Função para armazenar dados da peneira e redirecionar para página de inscrição
-function inscreverPeneira(peneiraId) {
-    try {
-        // Buscar os dados completos da peneira pelo ID
-        const peneira = peneirasData.find(p => p.id === peneiraId);
-        
-        if (!peneira) {
-            showNotification('Erro: Peneira não encontrada', 'error');
-            return;
-        }
-        
-        // Armazenar os dados da peneira no localStorage
-        const dadosPeneira = {
-            id: peneira.id,
-            titulo: peneira.titulo,
-            clube: peneira.clube,
-            endereco: peneira.endereco,
-            data: peneira.data,
-            horario: peneira.horario,
-            categoria: peneira.categoria,
-            requisitos: peneira.requisitos,
-            contato: peneira.contato,
-            distancia: peneira.distancia,
-            status: peneira.status,
-            vagasDisponiveis: peneira.vagasDisponiveis,
-            totalVagas: peneira.totalVagas,
-            prazoInscricao: peneira.prazoInscricao,
-            inscricaoEncerrada: peneira.inscricaoEncerrada,
-            timestamp: new Date().toISOString() // Para controle de validade dos dados
-        };
-        
-        localStorage.setItem('peneiraInscricao', JSON.stringify(dadosPeneira));
-        
-        // Opcional: Também armazenar no sessionStorage como backup
-        sessionStorage.setItem('peneiraInscricao', JSON.stringify(dadosPeneira));
-        
-        console.log('Dados da peneira armazenados:', dadosPeneira);
-        
-        // Redirecionar para a página de inscrição
-        window.location.href = 'https://example.com/inscricao';
-        
-    } catch (error) {
-        console.error('Erro ao processar inscrição:', error);
-        showNotification('Erro ao processar inscrição. Tente novamente.', 'error');
-    }
-}
-
-// Função para recuperar dados da peneira na página de inscrição
-function recuperarDadosPeneira() {
-    try {
-        // Tentar recuperar do localStorage primeiro
-        let dadosString = localStorage.getItem('peneiraInscricao');
-        
-        // Se não encontrar no localStorage, tentar no sessionStorage
-        if (!dadosString) {
-            dadosString = sessionStorage.getItem('peneiraInscricao');
-        }
-        
-        if (!dadosString) {
-            console.warn('Nenhum dado de peneira encontrado no armazenamento');
-            return null;
-        }
-        
-        const dados = JSON.parse(dadosString);
-        
-        // Verificar se os dados não são muito antigos (opcional - 24 horas)
-        const timestamp = new Date(dados.timestamp);
-        const agora = new Date();
-        const diferencaHoras = (agora - timestamp) / (1000 * 60 * 60);
-        
-        if (diferencaHoras > 24) {
-            console.warn('Dados da peneira expirados (mais de 24 horas)');
-            // Limpar dados expirados
-            localStorage.removeItem('peneiraInscricao');
-            sessionStorage.removeItem('peneiraInscricao');
-            return null;
-        }
-        
-        console.log('Dados da peneira recuperados:', dados);
-        return dados;
-        
-    } catch (error) {
-        console.error('Erro ao recuperar dados da peneira:', error);
-        return null;
-    }
-}
-
-// Função para limpar dados da peneira após uso (opcional)
-function limparDadosPeneira() {
-    localStorage.removeItem('peneiraInscricao');
-    sessionStorage.removeItem('peneiraInscricao');
-    console.log('Dados da peneira removidos do armazenamento');
 }
