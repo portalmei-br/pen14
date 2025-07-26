@@ -765,15 +765,11 @@ function getDiasRestantes() {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays < 0) {
-        return 'Prazo expirado';
+        return 'Últimas Vagas';
     } else if (diffDays === 0) {
-        return 'Último dia!';
+        return 'Últimas Vagas!';
     } else if (diffDays === 1) {
-        return 'Termina amanhã';
-    } else if (diffDays <= 7) {
-        return `${diffDays} dias restantes`;
-    } else {
-        return `${diffDays} dias restantes`;
+        return 'Últimas Vagas';
     }
 }
 
